@@ -8,7 +8,7 @@ function fail {
 function retry {
   local n=1
   local max=3 # 3 retries before failure
-  local delay=5 # delay between retries, 5 seconds
+  local delay=15 # delay between retries, 15 seconds
   while true; do
     echo "Running command '$@' with retry, attempt $n/$max"
     "$@" && break || {
