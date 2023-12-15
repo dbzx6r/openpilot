@@ -89,9 +89,7 @@ class Uploader:
     self.immediate_priority = {"qlog": 0, "qlog.bz2": 0, "qcamera.ts": 1}
 
   def get_upload_sort(self, name: str) -> int:
-    if name in self.immediate_priority:
-      return self.immediate_priority[name]
-    return 1000
+    return self.immediate_priority.get(name, 1000)
 
   def list_upload_files(self) -> Iterator[Tuple[str, str, str]]:
     if not os.path.isdir(self.root):
@@ -197,7 +195,7 @@ class Uploader:
       # tag files of 0 size as uploaded
       success = True
     elif name in self.immediate_priority and sz > UPLOAD_QLOG_QCAM_MAX_SIZE:
-      cloudlog.event("uploader_too_large", key=key, fn=fn, sz=sz)
+      cloudlog.event("uploader_too_large", key=key, fn=fn, sz=sz, error=True)
       success = True
     else:
       start_time = time.monotonic()
@@ -238,42 +236,29 @@ class Uploader:
     return msg
 
 
-def uploader_fn(exit_event: threading.Event) -> None:
-  try:
-    set_core_affinity([0, 1, 2, 3])
-  except Exception:
-    cloudlog.exception("failed to set core affinity")
+def main(exit_event: Optional[threading.Event] = None) -> None:
+  set_core_affinity([0, 1, 2, 3])
 
   clear_locks(Paths.log_root())
-
-  params = Params()
-  dongle_id = params.get("DongleId", encoding='utf8')
-
-  if dongle_id is None:
-    cloudlog.info("uploader missing dongle_id")
-    raise Exception("uploader can't start without dongle id")
 
   if TICI and not Path("/data/media").is_mount():
     cloudlog.warning("NVME not mounted")
 
   sm = messaging.SubMaster(['deviceState'])
   pm = messaging.PubMaster(['uploaderState'])
+
+  dongle_id = Params().get("DongleId", encoding='utf8')
+  assert dongle_id is not None, "uploader needs a valid dongle ID"
   uploader = Uploader(dongle_id, Paths.log_root())
 
   backoff = 0.1
-  while not exit_event.is_set():
+  while exit_event is None or not exit_event.is_set():
     sm.update(0)
-    offroad = params.get_bool("IsOffroad")
-    network_type = sm['deviceState'].networkType if not force_wifi else NetworkType.wifi
-    if network_type == NetworkType.none:
-      if allow_sleep:
-        time.sleep(60 if offroad else 5)
-      continue
-
     d = uploader.next_file_to_upload()
-    if d is None:  # Nothing to upload
+    network_type = sm['deviceState'].networkType if not force_wifi else NetworkType.wifi
+    if network_type == NetworkType.none or d is None:
       if allow_sleep:
-        time.sleep(60 if offroad else 5)
+        time.sleep(60)
       continue
 
     name, key, fn = d
@@ -283,18 +268,11 @@ def uploader_fn(exit_event: threading.Event) -> None:
       key += ".bz2"
 
     success = uploader.upload(name, key, fn, sm['deviceState'].networkType.raw, sm['deviceState'].networkMetered)
-    if success:
-      backoff = 0.1
-    elif allow_sleep:
-      cloudlog.info("upload backoff %r", backoff)
+    backoff = 0.1 if success else min(backoff*2, 120)
+    if allow_sleep:
       time.sleep(backoff + random.uniform(0, backoff))
-      backoff = min(backoff*2, 120)
 
     pm.send("uploaderState", uploader.get_msg())
-
-
-def main() -> None:
-  uploader_fn(threading.Event())
 
 
 if __name__ == "__main__":
