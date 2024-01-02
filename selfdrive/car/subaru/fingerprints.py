@@ -21,6 +21,7 @@ FW_VERSIONS = {
       b'\x00\x00e@\x00\x00\x00\x00',
       b'\x00\x00e@\x1f@ $',
       b"\x00\x00e~\x1f@ '",
+      b'\xf1\x00\xac\x04\x00',
     ],
     (Ecu.engine, 0x7e0, None): [
       b'\xbb,\xa0t\x07',
@@ -35,6 +36,7 @@ FW_VERSIONS = {
       b'\x01\xfe\xf7\x00\x00',
       b'\x01\xfe\xf9\x00\x00',
       b'\x01\xfe\xfa\x00\x00',
+      b'\xf1\x00\xa4\x10@',
     ],
   },
   CAR.ASCENT_2023: {
