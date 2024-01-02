@@ -181,7 +181,7 @@ env = Environment(
     "-g",
     "-fPIC",
     "-O2",
-    "-Wunused",
+    #"-Wunused",
     "-Werror",
     "-Wshadow",
     "-Wno-unknown-warning-option",
