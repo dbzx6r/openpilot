@@ -52,7 +52,10 @@ class CarState(CarStateBase):
     can_gear = int(cp_transmission.vl["Transmission"]["Gear"])
     ret.gearShifter = self.parse_gear_shifter(self.shifter_values.get(can_gear, None))
 
-    ret.steeringAngleDeg = cp.vl["Steering_Torque"]["Steering_Angle"]
+    if self.car_fingerprint == CAR.WRX_PREGLOBAL:
+      ret.steeringAngleDeg = cp.vl["Steering"]["Steering_Angle"]
+    else:
+      ret.steeringAngleDeg = cp.vl["Steering_Torque"]["Steering_Angle"]
 
     if self.car_fingerprint not in PREGLOBAL_CARS:
       # ideally we get this from the car, but unclear if it exists. diagnostic software doesn't even have it
