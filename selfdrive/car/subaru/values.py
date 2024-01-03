@@ -87,6 +87,7 @@ class CAR(StrEnum):
   LEGACY_PREGLOBAL = "SUBARU LEGACY 2015 - 2018"
   OUTBACK_PREGLOBAL = "SUBARU OUTBACK 2015 - 2017"
   OUTBACK_PREGLOBAL_2018 = "SUBARU OUTBACK 2018 - 2019"
+  WRX_PREGLOBAL = "SUBARU WRX 2018"
 
 
 class Footnote(Enum):
@@ -135,6 +136,7 @@ CAR_INFO: Dict[str, Union[SubaruCarInfo, List[SubaruCarInfo]]] = {
   CAR.FORESTER_2022: SubaruCarInfo("Subaru Forester 2022-23", "All", car_parts=CarParts.common([CarHarness.subaru_c])),
   CAR.OUTBACK_2023: SubaruCarInfo("Subaru Outback 2023", "All", car_parts=CarParts.common([CarHarness.subaru_d])),
   CAR.ASCENT_2023: SubaruCarInfo("Subaru Ascent 2023", "All", car_parts=CarParts.common([CarHarness.subaru_d])),
+  CAR.WRX_PREGLOBAL: SubaruCarInfo("Subaru WRX 2016-18", car_parts=CarParts.common([CarHarness.subaru_b])),
 }
 
 SUBARU_VERSION_REQUEST = bytes([uds.SERVICE_TYPE.READ_DATA_BY_IDENTIFIER]) + \
@@ -191,11 +193,12 @@ DBC = {
   CAR.LEGACY_PREGLOBAL: dbc_dict('subaru_outback_2015_generated', None),
   CAR.OUTBACK_PREGLOBAL: dbc_dict('subaru_outback_2015_generated', None),
   CAR.OUTBACK_PREGLOBAL_2018: dbc_dict('subaru_outback_2019_generated', None),
+  CAR.WRX_PREGLOBAL: dbc_dict('subaru_forester_2017_generated', None),
 }
 
 LKAS_ANGLE = {CAR.FORESTER_2022, CAR.OUTBACK_2023, CAR.ASCENT_2023}
 GLOBAL_GEN2 = {CAR.OUTBACK, CAR.LEGACY, CAR.OUTBACK_2023, CAR.ASCENT_2023}
-PREGLOBAL_CARS = {CAR.FORESTER_PREGLOBAL, CAR.LEGACY_PREGLOBAL, CAR.OUTBACK_PREGLOBAL, CAR.OUTBACK_PREGLOBAL_2018}
+PREGLOBAL_CARS = {CAR.FORESTER_PREGLOBAL, CAR.LEGACY_PREGLOBAL, CAR.OUTBACK_PREGLOBAL, CAR.OUTBACK_PREGLOBAL_2018, CAR.WRX_PREGLOBAL}
 HYBRID_CARS = {CAR.CROSSTREK_HYBRID, CAR.FORESTER_HYBRID}
 
 # Cars that temporarily fault when steering angle rate is greater than some threshold.
