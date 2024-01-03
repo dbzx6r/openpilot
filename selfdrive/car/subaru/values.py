@@ -136,7 +136,7 @@ CAR_INFO: Dict[str, Union[SubaruCarInfo, List[SubaruCarInfo]]] = {
   CAR.FORESTER_2022: SubaruCarInfo("Subaru Forester 2022-23", "All", car_parts=CarParts.common([CarHarness.subaru_c])),
   CAR.OUTBACK_2023: SubaruCarInfo("Subaru Outback 2023", "All", car_parts=CarParts.common([CarHarness.subaru_d])),
   CAR.ASCENT_2023: SubaruCarInfo("Subaru Ascent 2023", "All", car_parts=CarParts.common([CarHarness.subaru_d])),
-  CAR.WRX_PREGLOBAL: SubaruCarInfo("Subaru WRX 2016-18", car_parts=CarParts.common([CarHarness.subaru_b])),
+  CAR.WRX_PREGLOBAL: SubaruCarInfo("Subaru WRX 2016-2020", car_parts=CarParts.common([CarHarness.subaru_b])),
 }
 
 SUBARU_VERSION_REQUEST = bytes([uds.SERVICE_TYPE.READ_DATA_BY_IDENTIFIER]) + \
