@@ -117,7 +117,7 @@ class CarInterface(CarInterfaceBase):
       ret.steerRatio = 20           # learned, 14 stock
 
     elif candidate == CAR.WRX_PREGLOBAL:
-      ret.safetyConfigs[0].safetyParam = 1  # WRX has reversed driver torque signal
+      ret.safetyConfigs[0].safetyParam = Panda.FLAG_SUBARU_PREGLOBAL_REVERSED_DRIVER_TORQUE  # WRX has reversed driver torque signal
       ret.mass = 1568 + STD_CARGO_KG
       ret.wheelbase = 2.67
       ret.centerToFront = ret.wheelbase * 0.5
