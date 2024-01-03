@@ -559,6 +559,7 @@ FW_VERSIONS = {
       b'\xa8\x8e\xf41\x00',
       b'\xa8\xfe\xf41\x00',
     ],
+  },
   CAR.WRX_PREGLOBAL: {
     (Ecu.abs, 0x7b0, None): [
       b'\x9a\x95R\x00',
@@ -586,4 +587,5 @@ FW_VERSIONS = {
       b'\xcb\xfd\xd0\x80\x00',
     ],
   },
+}
 }
